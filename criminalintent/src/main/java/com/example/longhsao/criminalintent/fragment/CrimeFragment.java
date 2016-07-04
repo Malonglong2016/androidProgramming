@@ -3,6 +3,7 @@ package com.example.longhsao.criminalintent.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ public class CrimeFragment extends Fragment {
     private Button mDateButton;
     private CheckBox mSolvedCheckbox;
     public static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.crime_id";
+    private static final String DIALOG_DATE = "date";
 
     public static CrimeFragment newIntance(UUID id){
         Bundle args = new Bundle();
@@ -58,7 +60,14 @@ public class CrimeFragment extends Fragment {
         mSolvedCheckbox.setChecked(mCrime.ismSolved());
         SimpleDateFormat format = new SimpleDateFormat("E yyyy-MM-dd HH:mm");
         mDateButton.setText(format.format(mCrime.getmDate()));
-        mDateButton.setEnabled(false);
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getmDate());
+                dialog.show(manager, DIALOG_DATE);
+            }
+        });
 
         mTitleField.addTextChangedListener(new TextWatcher() {
             @Override
