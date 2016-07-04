@@ -1,10 +1,14 @@
 package com.example.longhsao.criminalintent.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 
@@ -47,14 +51,27 @@ public class DatePickerFragment extends DialogFragment {
         datePicker.init(year, money, day, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                mDate = new GregorianCalendar(year, monthOfYear, day).getTime();
+                mDate = new GregorianCalendar(year, monthOfYear, dayOfMonth).getTime();
                 getArguments().putSerializable(EXTRA_DATE, mDate);
             }
         });
         return new AlertDialog.Builder(getActivity())
                 .setView(view)
                 .setTitle(R.string.date_picker_title)
-                .setPositiveButton(android.R.string.ok, null)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendResult(Activity.RESULT_OK);
+                    }
+                })
                 .create();
+    }
+
+    private void sendResult(int resultCode){
+        if(getTargetFragment() == null)
+            return;
+        Intent i = new Intent();
+        i.putExtra(EXTRA_DATE, mDate);
+        getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, i);
     }
 }
