@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -12,13 +11,12 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.longhsao.criminalintent.CrimeActivity;
+import com.example.longhsao.criminalintent.activity.CrimeActivity;
 import com.example.longhsao.criminalintent.R;
 import com.example.longhsao.criminalintent.bean.Crime;
 import com.example.longhsao.criminalintent.bean.CrimeLab;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by 45411_000 on 2016/7/1.
