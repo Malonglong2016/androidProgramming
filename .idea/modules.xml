@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/GeoQuiz/GeoQuiz.iml" filepath="$PROJECT_DIR$/GeoQuiz/GeoQuiz.iml" />
+      <module fileurl="file://$PROJECT_DIR$/androidProgramming.iml" filepath="$PROJECT_DIR$/androidProgramming.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GeoQuiz/app.iml" filepath="$PROJECT_DIR$/GeoQuiz/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/criminalintent/criminalintent.iml" filepath="$PROJECT_DIR$/criminalintent/criminalintent.iml" />
+    </modules>
+  </component>
+</project>
