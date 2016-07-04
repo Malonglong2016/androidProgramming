@@ -11,8 +11,8 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.longhsao.criminalintent.activity.CrimeActivity;
 import com.example.longhsao.criminalintent.R;
+import com.example.longhsao.criminalintent.activity.CrimePagerActivity;
 import com.example.longhsao.criminalintent.bean.Crime;
 import com.example.longhsao.criminalintent.bean.CrimeLab;
 
@@ -46,7 +46,7 @@ public class CrimeListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Crime crime = (Crime) getListAdapter().getItem(position);
-        Intent intent = new Intent(getActivity(), CrimeActivity.class);
+        Intent intent = new Intent(getActivity(), CrimePagerActivity.class);
         intent.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getmId());
         startActivity(intent);
     }
