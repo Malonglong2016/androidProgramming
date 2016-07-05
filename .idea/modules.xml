@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/androidProgramming.iml" filepath="$PROJECT_DIR$/androidProgramming.iml" />
       <module fileurl="file://$PROJECT_DIR$/GeoQuiz/app.iml" filepath="$PROJECT_DIR$/GeoQuiz/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/criminalintent/criminalintent.iml" filepath="$PROJECT_DIR$/criminalintent/criminalintent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hellomoon/hellomoon.iml" filepath="$PROJECT_DIR$/hellomoon/hellomoon.iml" />
     </modules>
   </component>
 </project>
