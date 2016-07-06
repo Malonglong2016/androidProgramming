@@ -37,7 +37,6 @@ public class CrimePagerActivity extends AppCompatActivity {
         setContentView(mViewPager);
 
         mCrimes = CrimeLab.get(this).getCrimes();
-
         FragmentManager manager = getSupportFragmentManager();
 
         mViewPager.setAdapter(new FragmentStatePagerAdapter(manager) {
