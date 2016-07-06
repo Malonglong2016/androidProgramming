@@ -100,7 +100,9 @@ public class CrimeListFragment extends ListFragment {
             isSolved.setChecked(crime.ismSolved());
             return convertView;
         }
+
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
