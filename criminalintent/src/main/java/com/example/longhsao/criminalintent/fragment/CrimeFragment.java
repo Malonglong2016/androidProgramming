@@ -24,6 +24,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.example.longhsao.criminalintent.R;
+import com.example.longhsao.criminalintent.activity.CrimenCameraActivity;
 import com.example.longhsao.criminalintent.bean.Crime;
 import com.example.longhsao.criminalintent.bean.CrimeLab;
 
@@ -74,6 +75,14 @@ public class CrimeFragment extends Fragment {
         mTitleField = (EditText) v.findViewById(R.id.crime_title);
         mDateButton = (Button) v.findViewById(R.id.crime_date);
         mSolvedCheckbox = (CheckBox) v.findViewById(R.id.crime_solved);
+        View crime_imageButton = v.findViewById(R.id.crime_imageButton);
+        crime_imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), CrimenCameraActivity.class);
+                startActivity(i);
+            }
+        });
 
         mTitleField.setText(mCrime.getmTitle());
         mSolvedCheckbox.setChecked(mCrime.ismSolved());
