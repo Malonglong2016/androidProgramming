@@ -3,6 +3,7 @@ package com.example.longhsao.criminalintent.fragment;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +14,9 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,11 +25,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.longhsao.criminalintent.R;
 import com.example.longhsao.criminalintent.activity.CrimenCameraActivity;
 import com.example.longhsao.criminalintent.bean.Crime;
 import com.example.longhsao.criminalintent.bean.CrimeLab;
+import com.example.longhsao.criminalintent.bean.Photo;
+import com.example.longhsao.criminalintent.utils.PictureUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,9 +47,11 @@ public class CrimeFragment extends Fragment {
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckbox;
+    private ImageView mPhotoView;
     public static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.crime_id";
     private static final String DIALOG_DATE = "date";
     private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_PHOTO = 1;
 
     public static CrimeFragment newIntance(UUID id) {
         Bundle args = new Bundle();
@@ -75,12 +83,13 @@ public class CrimeFragment extends Fragment {
         mTitleField = (EditText) v.findViewById(R.id.crime_title);
         mDateButton = (Button) v.findViewById(R.id.crime_date);
         mSolvedCheckbox = (CheckBox) v.findViewById(R.id.crime_solved);
+        mPhotoView = (ImageView) v.findViewById(R.id.crime_imageView);
         View crime_imageButton = v.findViewById(R.id.crime_imageButton);
         crime_imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), CrimenCameraActivity.class);
-                startActivity(i);
+                startActivityForResult(i, REQUEST_PHOTO);
             }
         });
 
@@ -123,6 +132,28 @@ public class CrimeFragment extends Fragment {
         return v;
     }
 
+    private void showPhoto(){
+        Photo p = mCrime.getPhoto();
+        BitmapDrawable b = null;
+        if (p != null){
+            String path = getActivity().getFileStreamPath(p.getFilename()).getAbsolutePath();
+            b = PictureUtils.getScaledDrawable(getActivity(), path);
+        }
+        mPhotoView.setImageDrawable(b);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        showPhoto();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        PictureUtils.cleanImageView(mPhotoView);
+    }
+
     @NonNull
     private void updataDate() {
         SimpleDateFormat format = new SimpleDateFormat("E yyyy-MM-dd HH:mm");
@@ -142,6 +173,13 @@ public class CrimeFragment extends Fragment {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setmDate(date);
             updataDate();
+        } else if (requestCode == REQUEST_PHOTO){
+            String fileName = data.getStringExtra(CrimeCameraFragment.EXTRA_PHOTO_FILENAME);
+            if (!TextUtils.isEmpty(fileName)){
+                Photo p = new Photo(fileName);
+                mCrime.setPhoto(p);
+                showPhoto();
+            }
         }
     }
 
