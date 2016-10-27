@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import com.example.longhsao.criminalintent.bean.CrimeLab;
 import com.example.longhsao.criminalintent.bean.Photo;
 import com.example.longhsao.criminalintent.utils.PictureUtils;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -50,6 +52,7 @@ public class CrimeFragment extends Fragment {
     private ImageView mPhotoView;
     public static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.crime_id";
     private static final String DIALOG_DATE = "date";
+    private static final String DIALOG_IMAGE = "image";
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_PHOTO = 1;
 
@@ -129,6 +132,34 @@ public class CrimeFragment extends Fragment {
                 mCrime.setmSolved(isChecked);
             }
         });
+
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Photo photo = mCrime.getPhoto();
+                if (photo == null) return;
+
+                File file = getActivity().getFileStreamPath(photo.getFilename());
+                if (file == null) return;
+
+                String path = file.getAbsolutePath();
+                ImageFragment fragment = ImageFragment.newInstance(path);
+                fragment.show(getActivity().getSupportFragmentManager(), DIALOG_IMAGE);
+            }
+        });
+
+        View reprtBtn = v.findViewById(R.id.crime_reportButton);
+        reprtBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
+                i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
+                i = Intent.createChooser(i, getString(R.string.send_report));
+                startActivity(i);
+            }
+        });
         return v;
     }
 
@@ -196,5 +227,27 @@ public class CrimeFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private String getCrimeReport(){
+        String soledString = null;
+        if (mCrime.ismSolved()){
+            soledString = getString(R.string.crime_report_solved);
+        } else {
+            soledString = getString(R.string.crime_report_unsolved);
+        }
+
+        String dateFormat = "EEE, MMM dd";
+        String dateString = DateFormat.format(dateFormat, mCrime.getmDate()).toString();
+
+        String suspect = mCrime.getSuspect();
+        if (suspect == null){
+            suspect = getString(R.string.crime_report_no_suspect);
+        } else {
+            suspect = getString(R.string.crime_report_suspect, suspect);
+        }
+
+        String report = getString(R.string.crime_report, mCrime.getmTitle(), dateString, soledString, suspect);
+        return report;
     }
 }
