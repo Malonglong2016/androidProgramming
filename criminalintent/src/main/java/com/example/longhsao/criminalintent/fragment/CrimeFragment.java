@@ -3,9 +3,14 @@ package com.example.longhsao.criminalintent.fragment;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -38,6 +43,7 @@ import com.example.longhsao.criminalintent.utils.PictureUtils;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -50,11 +56,13 @@ public class CrimeFragment extends Fragment {
     private Button mDateButton;
     private CheckBox mSolvedCheckbox;
     private ImageView mPhotoView;
+    private Button mSuspectButton;
     public static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.crime_id";
     private static final String DIALOG_DATE = "date";
     private static final String DIALOG_IMAGE = "image";
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_PHOTO = 1;
+    private static final int REQUEST_CONTACT = 2;
 
     public static CrimeFragment newIntance(UUID id) {
         Bundle args = new Bundle();
@@ -157,10 +165,35 @@ public class CrimeFragment extends Fragment {
                 i.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
                 i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
                 i = Intent.createChooser(i, getString(R.string.send_report));
-                startActivity(i);
+
+                if (checkIntent(i)){
+                    startActivity(i);
+                }
             }
         });
+
+        //联系人列表
+        mSuspectButton = (Button) v.findViewById(R.id.crime_suspectButton);
+        mSuspectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                if (checkIntent(i)){
+                    startActivityForResult(i, REQUEST_CONTACT);
+                }
+            }
+        });
+
+        if (mCrime.getSuspect() != null){
+            mSuspectButton.setText(mCrime.getSuspect());
+        }
         return v;
+    }
+
+    private boolean checkIntent(Intent i) {
+        PackageManager pm = getActivity().getPackageManager();
+        List<ResolveInfo> infos = pm.queryIntentActivities(i, 0);
+        return infos.size() > 0;
     }
 
     private void showPhoto(){
@@ -211,6 +244,21 @@ public class CrimeFragment extends Fragment {
                 mCrime.setPhoto(p);
                 showPhoto();
             }
+        } else if (requestCode == REQUEST_CONTACT){
+            Uri uri = data.getData();
+            String[] queryFields = new String[]{ContactsContract.Contacts.DISPLAY_NAME};
+            Cursor c = getActivity().getContentResolver().query(uri, queryFields, null, null, null);
+            if (c.getCount() == 0){
+                c.close();
+                return;
+            }
+
+            c.moveToFirst();
+            String suspect = c.getString(0);
+            mCrime.setSuspect(suspect);
+            mSuspectButton.setText(suspect);
+            c.close();
+
         }
     }
 
