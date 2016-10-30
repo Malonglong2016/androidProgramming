@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/GeoQuiz" />
             <option value="$PROJECT_DIR$/criminalintent" />
             <option value="$PROJECT_DIR$/hellomoon" />
+            <option value="$PROJECT_DIR$/nerdlauncher" />
           </set>
         </option>
         <option name="myModules">
@@ -20,6 +21,7 @@
             <option value="$PROJECT_DIR$/GeoQuiz" />
             <option value="$PROJECT_DIR$/criminalintent" />
             <option value="$PROJECT_DIR$/hellomoon" />
+            <option value="$PROJECT_DIR$/nerdlauncher" />
           </set>
         </option>
       </GradleProjectSettings>

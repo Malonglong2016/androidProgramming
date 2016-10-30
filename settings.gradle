@@ -1,1 +1,1 @@
-include ':GeoQuiz', ':criminalintent', ':hellomoon'
+include ':GeoQuiz', ':criminalintent', ':hellomoon', ':nerdlauncher'

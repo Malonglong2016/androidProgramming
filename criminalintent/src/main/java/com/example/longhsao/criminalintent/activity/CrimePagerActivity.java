@@ -22,7 +22,7 @@ import java.util.UUID;
 /**
  * Created by 45411_000 on 2016/7/4.
  */
-public class CrimePagerActivity extends AppCompatActivity {
+public class CrimePagerActivity extends AppCompatActivity implements CrimeFragment.Callbacks{
 
     private ViewPager mViewPager;
 
@@ -78,5 +78,10 @@ public class CrimePagerActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
+
+    @Override
+    public void onCrimeUpdated(Crime crime) {
+
     }
 }

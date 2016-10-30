@@ -1,6 +1,7 @@
 package com.example.longhsao.criminalintent.fragment;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +39,23 @@ public class CrimeListFragment extends ListFragment {
 
     private static final String TAG = "CrimeListFragment";
     private boolean mSubtitleVisible;
+    private Callbacks mCallbacks;
+
+    public interface Callbacks{
+        void onCrimSelected(Crime crime);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallbacks = (Callbacks) activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,10 +100,8 @@ public class CrimeListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Crime crime = (Crime) getListAdapter().getItem(position);
-        Intent intent = new Intent(getActivity(), CrimePagerActivity.class);
-        intent.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getmId());
-        startActivity(intent);
+        Crime c = ((CrimeAdapter)getListAdapter()).getItem(position);
+       mCallbacks.onCrimSelected(c);
     }
 
     private class CrimeAdapter extends ArrayAdapter<Crime> {
@@ -129,9 +145,8 @@ public class CrimeListFragment extends ListFragment {
             case R.id.menu_item_new_crime:
                 Crime crime = new Crime();
                 CrimeLab.get(getActivity()).addCrime(crime);
-                Intent i = new Intent(getActivity(), CrimePagerActivity.class);
-                i.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getmId());
-                startActivityForResult(i, 0);
+                ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+                mCallbacks.onCrimSelected(crime);
                 return true;
             case R.id.menu_item_show_subtitle:
                 ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -171,5 +186,9 @@ public class CrimeListFragment extends ListFragment {
                 return true;
         }
         return super.onContextItemSelected(item);
+    }
+
+    public void updateUI(){
+        ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
     }
 }
